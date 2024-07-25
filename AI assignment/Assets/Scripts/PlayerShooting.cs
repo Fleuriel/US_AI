@@ -21,7 +21,6 @@ public class PlayerShooting : MonoBehaviour
 
     void ShootBullet()
     {
-        
         Debug.Log("shooting");
         GameObject bullet = Instantiate(bulletPrefab, bulletPoint.transform.position, transform.rotation);
         bullet.GetComponent<Rigidbody>().AddForce(ourCamera.transform.forward * bulletSpeed);

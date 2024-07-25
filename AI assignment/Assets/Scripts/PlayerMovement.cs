@@ -97,8 +97,6 @@ public class PlayerMovement : MonoBehaviour
             Pos3 = false;
 
         }
-
-
     }
 
 }

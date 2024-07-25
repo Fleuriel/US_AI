@@ -52,13 +52,13 @@ public class EnemyShooting : MonoBehaviour
             if (hit.transform.gameObject == player)
             {
                 // Comment out the timing logic for future references
-                // if (Time.time >= nextFireTime)
-                // {
-                //     nextFireTime = Time.time + 1f / fireRate;
+                 if (Time.time >= nextFireTime)
+                 {
+                     nextFireTime = Time.time + 1f / fireRate;
 
-                // Call the Shoot method if the player is visible
-                ShootAtPlayer();
-                // }
+                    // Call the Shoot method if the player is visible
+                    ShootAtPlayer();
+                 }
             }
         }
     }

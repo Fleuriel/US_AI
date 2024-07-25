@@ -7,7 +7,8 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 turn;
     public float movementSpeed = 10f;
     public float turnSpeed = 1.0f;
-    private float verticalClampAngle = 80.0f; // Adjust this value to set the maximum pitch angle
+    //    private float verticalClampAngle = 80.0f; // Adjust this value to set the maximum pitch angle
+    private float horizontalTurn;
 
     public GameObject PlayerPosition;
     public GameObject PositionOne;

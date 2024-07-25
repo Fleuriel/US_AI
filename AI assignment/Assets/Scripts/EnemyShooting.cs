@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class EnemyShooting : MonoBehaviour
 {
-    public GameObject bulletPrefab; 
+    public GameObject bulletPrefab;
     public GameObject bulletPoint;
     public GameObject player;
+
 
 
     public float bulletSpeed = 500.0f;
@@ -14,6 +15,8 @@ public class EnemyShooting : MonoBehaviour
     public float fireRate = 1f; // Bullets per second
 
     private float nextFireTime;
+
+
 
 
     void Start()
@@ -40,6 +43,8 @@ public class EnemyShooting : MonoBehaviour
 
     void ShootAtPlayer()
     {
+
+
         if (Time.time >= nextFireTime)
         {
             nextFireTime = Time.time + 1f / fireRate;
@@ -59,5 +64,8 @@ public class EnemyShooting : MonoBehaviour
             // Destroy the bullet after 5 seconds
             Destroy(bullet, 5.0f);
         }
+
+
     }
 }
+

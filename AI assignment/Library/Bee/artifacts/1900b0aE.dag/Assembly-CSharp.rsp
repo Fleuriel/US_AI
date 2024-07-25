@@ -354,6 +354,7 @@
 -analyzer:"C:/Program Files/Unity/Hub/Editor/2022.3.30f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/Scripts/BulletShooting.cs"
 "Assets/Scripts/Bullet_Movement.cs"
+"Assets/Scripts/Camera.cs"
 "Assets/Scripts/EnemyShooting.cs"
 "Assets/Scripts/FloorScript.cs"
 "Assets/Scripts/PlayerMovement.cs"

@@ -6,7 +6,7 @@ public class PlayerShooting : MonoBehaviour
 {
     public GameObject bulletPrefab;
     public GameObject bulletPoint;
-
+    public GameObject ourCamera;
 
     //public Transform bulletSpawnPoint; // Where the bullet will spawn
     public float bulletSpeed;
@@ -24,7 +24,7 @@ public class PlayerShooting : MonoBehaviour
         
         Debug.Log("shooting");
         GameObject bullet = Instantiate(bulletPrefab, bulletPoint.transform.position, transform.rotation);
-        bullet.GetComponent<Rigidbody>().AddForce(transform.forward * bulletSpeed);
+        bullet.GetComponent<Rigidbody>().AddForce(ourCamera.transform.forward * bulletSpeed);
         Destroy(bullet, 2);
     } 
 }

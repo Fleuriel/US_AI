@@ -7,6 +7,8 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 turn;
     public float movementSpeed = 10f;
     public float turnSpeed = 1.0f;
+    public float rotationSpeed = 5.0f;  // Adjust this value to suit your needs
+
     //    private float verticalClampAngle = 80.0f; // Adjust this value to set the maximum pitch angle
     private float horizontalTurn;
 
@@ -14,6 +16,11 @@ public class PlayerMovement : MonoBehaviour
     public GameObject PositionOne;
     public GameObject PositionTwo;
     public GameObject PositionThree;
+
+    public float mouseSensitivity = 100f;  // Adjust this value to control sensitivity
+    public float verticalLookLimit = 80f;  // Maximum angle to look up or down
+
+    private float xRotation = 0f;  // To store vertical rotation
 
 
     bool Pos1;
@@ -27,15 +34,22 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         // Get input from WASD keys
-        // Get input from WASD keys
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
-        // Get input from mouse for horizontal rotation
-        horizontalTurn += Input.GetAxis("Mouse X") * turnSpeed;
+        // Get mouse input for rotation
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        // Update player horizontal rotation
-        transform.localRotation = Quaternion.Euler(0, horizontalTurn, 0);
+        // Calculate the new vertical rotation
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -verticalLookLimit, verticalLookLimit);
+
+        // Apply the vertical rotation to the camera
+        Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+
+        // Apply horizontal rotation to the player body
+        transform.Rotate(Vector3.up * mouseX);
 
         // Combine input to form movement vector relative to the player's rotation
         Vector3 forward = transform.forward * moveVertical;
@@ -44,7 +58,6 @@ public class PlayerMovement : MonoBehaviour
 
         // Move the player
         transform.Translate(movement, Space.World);
-
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {

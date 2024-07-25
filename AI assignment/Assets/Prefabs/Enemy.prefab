@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 549028295281211429}
   - component: {fileID: 8992801898157384611}
   - component: {fileID: 4620406822294007152}
-  - component: {fileID: 6685842152077056572}
+  - component: {fileID: 7426825806265565911}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -138,7 +138,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6685842152077056572
+--- !u!114 &7426825806265565911
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -147,15 +147,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 8063871138029509614}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5a2c935dbaac924d8029463bcf6bd11, type: 3}
+  m_Script: {fileID: 11500000, guid: 48bd2913a6506b443b3d0df109487872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 5308138698277731179, guid: 32615c123d1a97546a2c679b99e9ad91, type: 3}
-  bulletPoint: {fileID: 7692320822498259389}
-  player: {fileID: 0}
-  bulletSpeed: 100
-  turnSpeed: 2
+  currentState: 0
+  waypoints: []
+  patrolSpeed: 2
+  chaseSpeed: 4
+  detectionRange: 10
+  shootingRange: 5
   fireRate: 1
+  bulletPrefab: {fileID: 5308138698277731179, guid: 32615c123d1a97546a2c679b99e9ad91, type: 3}
+  bulletPoint: {fileID: 503582646318478773}
+  player: {fileID: 0}
+  rayPrefab: {fileID: 0}
+  bulletSpeed: 20
+  turnSpeed: 2
 --- !u!1 &8843813352653029804
 GameObject:
   m_ObjectHideFlags: 0

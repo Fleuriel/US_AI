@@ -160,7 +160,15 @@ public class EnemyFSM : MonoBehaviour
     private LineRenderer[] lineRenderers;
     public float rotationTolerance = 0.1f;  // Tolerance to stop rotating when close enough
     public float rotationSpeed = 5f;
-    private Vector3[] directions = new Vector3[9];
+    private Vector3[] directions = new Vector3[45];
+
+
+
+
+    void setDirection()
+    {
+
+    }
 
 
 
@@ -168,19 +176,69 @@ public class EnemyFSM : MonoBehaviour
     {
 
         // Define the directions for each ray
+
+        // DO NOT TOUCH THESE
         directions[0] = Vector3.forward;  // Center
-        directions[1] = (Vector3.forward + 0.05f * Vector3.up ).normalized;  // Top
-        directions[2] = (Vector3.forward + 0.05f * Vector3.left).normalized;  // Left
-        directions[3] = (Vector3.forward + 0.05f * Vector3.down).normalized;  // Bottom
-        directions[4] = (Vector3.forward + 0.05f * Vector3.right).normalized;  // Right
-        directions[5] = (Vector3.forward + 0.05f * Vector3.up  + 0.05f* Vector3.left).normalized;  // Top left
-        directions[6] = (Vector3.forward + 0.05f * Vector3.up  + 0.05f* Vector3.right ).normalized;  // Top right
-        directions[7] = (Vector3.forward + 0.05f * Vector3.down + 0.05f * Vector3.left ).normalized;  // Bottom left
+        directions[1] = (Vector3.forward + 0.05f * Vector3.up).normalized;  // Top
+        directions[2] = (Vector3.forward + 0.05f * Vector3.down).normalized;  // Bottom
+        directions[3] = (Vector3.forward + 0.5f * Vector3.left).normalized;  // Left
+        directions[4] = (Vector3.forward + 0.5f * Vector3.right).normalized;  // Right
+        directions[5] = (Vector3.forward + 0.05f * Vector3.up + 0.05f * Vector3.left).normalized;  // Top left
+        directions[6] = (Vector3.forward + 0.05f * Vector3.up + 0.05f * Vector3.right).normalized;  // Top right
+        directions[7] = (Vector3.forward + 0.05f * Vector3.down + 0.05f * Vector3.left).normalized;  // Bottom left
         directions[8] = (Vector3.forward + 0.05f * Vector3.down + 0.05f * Vector3.right).normalized;  // Bottom right
 
 
+        directions[9] = (Vector3.forward + 0.05f * Vector3.up + 0.05f * Vector3.left).normalized;  // Top left
+        directions[10] = (Vector3.forward + 0.05f * Vector3.up + 0.15f * Vector3.left).normalized;  // Top left
+        directions[11] = (Vector3.forward + 0.05f * Vector3.up + 0.25f * Vector3.left).normalized;  // Top left
+        directions[12] = (Vector3.forward + 0.05f * Vector3.up + 0.35f * Vector3.left).normalized;  // Top left
+        directions[13] = (Vector3.forward + 0.05f * Vector3.up + 0.45f * Vector3.left).normalized;  // Top left
+        directions[14] = (Vector3.forward + 0.05f * Vector3.up + 0.55f * Vector3.left).normalized;  // Top left
+
+        directions[15] = (Vector3.forward + 0.05f * Vector3.left).normalized;  // Top left
+        directions[16] = (Vector3.forward + 0.15f * Vector3.left).normalized;  // Top left
+        directions[17] = (Vector3.forward + 0.25f * Vector3.left).normalized;  // Top left
+        directions[18] = (Vector3.forward + 0.35f * Vector3.left).normalized;  // Top left
+        directions[19] = (Vector3.forward + 0.45f * Vector3.left).normalized;  // Top left
+        directions[20] = (Vector3.forward + 0.55f * Vector3.left).normalized;  // Top left
+
+        directions[21] = (Vector3.forward + 0.05f * Vector3.down + 0.05f * Vector3.left).normalized;  // Top left
+        directions[22] = (Vector3.forward + 0.05f * Vector3.down + 0.15f * Vector3.left).normalized;  // Top left
+        directions[23] = (Vector3.forward + 0.05f * Vector3.down + 0.25f * Vector3.left).normalized;  // Top left
+        directions[24] = (Vector3.forward + 0.05f * Vector3.down + 0.35f * Vector3.left).normalized;  // Top left
+        directions[25] = (Vector3.forward + 0.05f * Vector3.down + 0.45f * Vector3.left).normalized;  // Top left
+        directions[26] = (Vector3.forward + 0.05f * Vector3.down + 0.55f * Vector3.left).normalized;  // Top left
+
+
+        directions[27] = (Vector3.forward + 0.05f * Vector3.up + 0.05f * Vector3.right).normalized;  // Top left
+        directions[28] = (Vector3.forward + 0.05f * Vector3.up + 0.15f * Vector3.right).normalized;  // Top left
+        directions[29] = (Vector3.forward + 0.05f * Vector3.up + 0.25f * Vector3.right).normalized;  // Top left
+        directions[30] = (Vector3.forward + 0.05f * Vector3.up + 0.35f * Vector3.right).normalized;  // Top left
+        directions[31] = (Vector3.forward + 0.05f * Vector3.up + 0.45f * Vector3.right).normalized;  // Top left
+        directions[32] = (Vector3.forward + 0.05f * Vector3.up + 0.55f * Vector3.right).normalized;  // Top left
+
+        directions[33] = (Vector3.forward + 0.05f * Vector3.right).normalized;  // Top left
+        directions[34] = (Vector3.forward + 0.15f * Vector3.right).normalized;  // Top left
+        directions[35] = (Vector3.forward + 0.25f * Vector3.right).normalized;  // Top left
+        directions[36] = (Vector3.forward + 0.35f * Vector3.right).normalized;  // Top left
+        directions[37] = (Vector3.forward + 0.45f * Vector3.right).normalized;  // Top left
+        directions[38] = (Vector3.forward + 0.55f * Vector3.right).normalized;  // Top left
+
+        directions[39] = (Vector3.forward + 0.05f * Vector3.down + 0.05f * Vector3.right).normalized;  // Top left
+        directions[40] = (Vector3.forward + 0.05f * Vector3.down + 0.15f * Vector3.right).normalized;  // Top left
+        directions[41] = (Vector3.forward + 0.05f * Vector3.down + 0.25f * Vector3.right).normalized;  // Top left
+        directions[42] = (Vector3.forward + 0.05f * Vector3.down + 0.35f * Vector3.right).normalized;  // Top left
+        directions[43] = (Vector3.forward + 0.05f * Vector3.down + 0.45f * Vector3.right).normalized;  // Top left
+        directions[44] = (Vector3.forward + 0.05f * Vector3.down + 0.55f * Vector3.right).normalized;  // Top left
+
+
+
+
+
+
         // Create LineRenderer instances
-        lineRenderers = new LineRenderer[9];
+        lineRenderers = new LineRenderer[45];
         for (int i = 0; i < lineRenderers.Length; i++)
         {
             GameObject lrObject = new GameObject("LineRenderer_" + i);
@@ -335,12 +393,12 @@ public class EnemyFSM : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit))
         {
-            Debug.Log("Ray hit: " + hit.transform.name);
+            //Debug.Log("Ray hit: " + hit.transform.name);
 
             // Check if the raycast hits the player
             if (hit.transform.gameObject == player)
             {
-                Debug.Log("Player detected");
+               // Debug.Log("Player detected");
 
                 // Check if the enemy can fire
                 if (Time.time >= nextFireTime)

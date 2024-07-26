@@ -8,6 +8,9 @@ public class PlayerShooting : MonoBehaviour
     public GameObject bulletPoint;
     public GameObject ourCamera;
 
+    public AttributeManager PlayerATM;
+
+
     //public Transform bulletSpawnPoint; // Where the bullet will spawn
     public float bulletSpeed;
 

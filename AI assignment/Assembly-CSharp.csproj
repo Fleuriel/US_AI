@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\StarterAssets.cs" />
     <Compile Include="Assets\Scripts\BulletShooting.cs" />
     <Compile Include="Assets\Scripts\FloorScript.cs" />
+    <Compile Include="Assets\Scripts\AttributeManager.cs" />
     <Compile Include="Assets\Scripts\EnemyFSM.cs" />
     <Compile Include="Assets\Scripts\Bullet_Movement.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />

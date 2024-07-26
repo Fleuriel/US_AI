@@ -462,25 +462,43 @@ public class EnemyFSM : MonoBehaviour
         //}
 
 
-
         Vector3 closestHitPoint = Vector3.zero;
 
         for (int i = 0; i < directions.Length; i++)
         {
             Vector3 direction = transform.TransformDirection(directions[i]);
 
-            if (Physics.Raycast(OriginRay.transform.position, direction, out RaycastHit hitinfo, detectionRange) && hitinfo.collider.CompareTag("Player"))
+            if (Physics.Raycast(OriginRay.transform.position, direction, out RaycastHit hitinfo, detectionRange))
             {
-                
-                closestHitPoint = hitinfo.point;
+                // Check if the hit object is the player
+                if (hitinfo.collider.CompareTag("Player"))
+                {
+                    closestHitPoint = hitinfo.point;
 
-                // Set the positions for the LineRenderer to visualize the raycast hit
-                lineRenderers[i].SetPosition(0, OriginRay.transform.position);
-                lineRenderers[i].SetPosition(1, hitinfo.point);
+                    // Set the positions for the LineRenderer to visualize the raycast hit
+                    lineRenderers[i].SetPosition(0, OriginRay.transform.position);
+                    lineRenderers[i].SetPosition(1, hitinfo.point);
 
-                // Set the color of the line to red
-                lineRenderers[i].startColor = Color.red;
-                lineRenderers[i].endColor = Color.red;
+                    // Set the color of the line to red
+                    lineRenderers[i].startColor = Color.red;
+                    lineRenderers[i].endColor = Color.red;
+
+                  // var playerAttributes = hitinfo.collider.GetComponent<AttributeManager>();
+                  // if (playerAttributes != null)
+                  // {
+                  //     AttributeManager.DealDamage(hitinfo.collider.gameObject);
+                  // }
+                }
+                else
+                {
+                    // Hit something else (e.g., wall), draw to the hit point
+                    lineRenderers[i].SetPosition(0, OriginRay.transform.position);
+                    lineRenderers[i].SetPosition(1, hitinfo.point);
+
+                    // Set the color of the line to yellow
+                    lineRenderers[i].startColor = Color.yellow;
+                    lineRenderers[i].endColor = Color.yellow;
+                }
             }
             else
             {

@@ -181,6 +181,7 @@ public class EnemyFSM : MonoBehaviour
 
         // Check if the player is within detection range and in front of the enemy
 
+        // Check if the bullet is not null
         if (bullet != null)
         {
             if (!hasDetectedBullet)
@@ -199,7 +200,19 @@ public class EnemyFSM : MonoBehaviour
             // Optional: Log the action for debugging
             Debug.Log("Moving to Bullet's initial position at: " + bulletInitialPosition);
         }
-        else if (distanceToPlayer < detectionRange && angleToPlayer <= maxAngle)
+        else if (hasDetectedBullet)
+        { 
+            
+            // Ensure the agent continues to move towards the last known position of the bullet
+            agent.destination = bulletInitialPosition;
+
+            // Optional: Log the action for debugging
+            Debug.Log("Bullet destroyed, moving to last known position: " + bulletInitialPosition);
+            
+        }
+
+
+        if (distanceToPlayer < detectionRange && angleToPlayer <= maxAngle)
         {
             currentState = State.Chasing;
         }

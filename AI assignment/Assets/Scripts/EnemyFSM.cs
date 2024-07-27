@@ -1,129 +1,8 @@
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-
-//public class EnemyFSM : MonoBehaviour
-//{
-//    public enum State
-//    {
-//        Idle,
-//        Patrolling,
-//        Chasing,
-//        Shooting
-//    }
-
-//    public State currentState;
-//    public Transform[] waypoints;
-//    public float patrolSpeed = 2f;
-//    public float chaseSpeed = 4f;
-//    public float detectionRange = 10f;
-//    public float shootingRange = 5f;
-//    public float fireRate = 1f;
-
-//    public GameObject bulletPrefab;
-//    public GameObject bulletPoint;
-//    public float bulletSpeed = 500.0f;
-
-//    private int currentWaypointIndex;
-//    private Transform player;
-//    private float nextFireTime;
-
-//    void Start()
-//    {
-//        currentState = State.Idle;
-//        player = GameObject.FindGameObjectWithTag("Player").transform;
-//    }
-
-//    void Update()
-//    {
-//        switch (currentState)
-//        {
-//            case State.Idle:
-//                Idle();
-//                break;
-//            case State.Patrolling:
-//                Patrol();
-//                break;
-//            case State.Chasing:
-//                Chase();
-//                break;
-//            case State.Shooting:
-//                Shoot();
-//                break;
-//        }
-
-//        if (Vector3.Distance(transform.position, player.position) < detectionRange)
-//        {
-//            currentState = State.Chasing;
-//        }
-//        else if (currentState == State.Chasing && Vector3.Distance(transform.position, player.position) >= detectionRange)
-//        {
-//            currentState = State.Patrolling;
-//        }
-
-//        if (Vector3.Distance(transform.position, player.position) <= shootingRange)
-//        {
-//            currentState = State.Shooting;
-//        }
-//    }
-
-//    void Idle()
-//    {
-//        // Logic for idle state
-//        // Transition to patrolling after some time or condition
-//        currentState = State.Patrolling;
-//    }
-
-//    void Patrol()
-//    {
-//        // Logic for patrolling state
-//        if (waypoints.Length == 0) return;
-
-//        Transform targetWaypoint = waypoints[currentWaypointIndex];
-//        transform.position = Vector3.MoveTowards(transform.position, targetWaypoint.position, patrolSpeed * Time.deltaTime);
-
-//        if (Vector3.Distance(transform.position, targetWaypoint.position) < 0.1f)
-//        {
-//            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
-//        }
-//    }
-
-//    void Chase()
-//    {
-//        // Logic for chasing state
-//        transform.position = Vector3.MoveTowards(transform.position, player.position, chaseSpeed * Time.deltaTime);
-
-//        if (Vector3.Distance(transform.position, player.position) <= shootingRange)
-//        {
-//            currentState = State.Shooting;
-//        }
-//    }
-
-//    void Shoot()
-//    {
-//        // Logic for shooting state
-//        if (Time.time >= nextFireTime)
-//        {
-//            nextFireTime = Time.time + 1f / fireRate;
-
-//            Vector3 direction = (player.position - bulletPoint.transform.position).normalized;
-//            GameObject bullet = Instantiate(bulletPrefab, bulletPoint.transform.position, Quaternion.identity);
-//            Rigidbody rb = bullet.GetComponent<Rigidbody>();
-//            rb.velocity = direction * bulletSpeed;
-//            Destroy(bullet, 5.0f);
-//        }
-
-//        if (Vector3.Distance(transform.position, player.position) > shootingRange)
-//        {
-//            currentState = State.Chasing;
-//        }
-//    }
-//}
-
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
+using System.Collections.Specialized;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyFSM : MonoBehaviour
 {
@@ -132,7 +11,8 @@ public class EnemyFSM : MonoBehaviour
         Idle,
         Patrolling,
         Chasing,
-        Shooting
+        Shooting,
+        GoLocation
     }
 
     public State currentState;
@@ -162,19 +42,27 @@ public class EnemyFSM : MonoBehaviour
     public float rotationSpeed = 5f;
     private Vector3[] directions = new Vector3[45];
 
+    private NavMeshAgent agent;
 
 
+    private Vector3 bulletInitialPosition;
 
-    void setDirection()
+    private bool hasBulletPosition = false;
+    private AudioSource audioSource;
+    // private float soundDelay = 0.03f;
+
+    private bool hasDetectedBullet = false;
+
+
+    public void SetBulletInitialPosition(Vector3 position)
     {
-
+        bulletInitialPosition = position;
+        hasBulletPosition = true;
+        currentState = State.GoLocation; // Change state to GoLocation when bullet position is set
     }
-
-
 
     void Start()
     {
-
         // Define the directions for each ray
 
         // DO NOT TOUCH THESE
@@ -233,9 +121,8 @@ public class EnemyFSM : MonoBehaviour
         directions[44] = (Vector3.forward + 0.05f * Vector3.down + 0.55f * Vector3.right).normalized;  // Top left
 
 
-
-
-
+        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        audioSource = GetComponent<AudioSource>();
 
         // Create LineRenderer instances
         lineRenderers = new LineRenderer[45];
@@ -256,8 +143,6 @@ public class EnemyFSM : MonoBehaviour
 
     void Update()
     {
-        
-
         switch (currentState)
         {
             case State.Idle:
@@ -272,9 +157,15 @@ public class EnemyFSM : MonoBehaviour
             case State.Shooting:
                 Shoot();
                 break;
+            case State.GoLocation:
+                GoLocation();
+                break;
         }
 
 
+        GameObject bullet = GameObject.FindGameObjectWithTag("PlayerBullet");
+
+        
 
         // Calculate the direction to the player
         Vector3 directionToPlayer = player.transform.position - transform.position;
@@ -289,7 +180,26 @@ public class EnemyFSM : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
         // Check if the player is within detection range and in front of the enemy
-        if (distanceToPlayer < detectionRange && angleToPlayer <= maxAngle)
+
+        if (bullet != null)
+        {
+            if (!hasDetectedBullet)
+            {
+                // Capture the initial position of the bullet
+                bulletInitialPosition = bullet.transform.position;
+                hasDetectedBullet = true;
+
+                // Optional: Log the initial position for debugging
+                Debug.Log("Bullet initial position captured at: " + bulletInitialPosition);
+            }
+
+            // Set the NavMeshAgent destination to the initial bullet's position
+            agent.destination = bulletInitialPosition;
+
+            // Optional: Log the action for debugging
+            Debug.Log("Moving to Bullet's initial position at: " + bulletInitialPosition);
+        }
+        else if (distanceToPlayer < detectionRange && angleToPlayer <= maxAngle)
         {
             currentState = State.Chasing;
         }
@@ -297,7 +207,7 @@ public class EnemyFSM : MonoBehaviour
         {
             currentState = State.Patrolling;
         }
-
+       
         if (Vector3.Distance(transform.position, player.transform.position) <= shootingRange)
         {
             currentState = State.Shooting;
@@ -320,21 +230,10 @@ public class EnemyFSM : MonoBehaviour
         GameObject targetWaypoint = waypoints[currentWaypointIndex];
         Vector3 targetPosition = targetWaypoint.transform.position;
 
-        // Calculate direction to the target waypoint
-        Vector3 directionToTarget = (targetPosition - transform.position).normalized;
 
-        // Rotate towards the direction to the target waypoint
-        if (directionToTarget != Vector3.zero) // Avoid zero direction
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        }
+        agent.destination = targetPosition;
 
-        // Move towards the target waypoint
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, patrolSpeed * Time.deltaTime);
-
-        // Update waypoint index if close enough to the target waypoint
-        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        if (Vector3.Distance(transform.position, targetPosition) < 1f)
         {
             currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
         }
@@ -345,13 +244,38 @@ public class EnemyFSM : MonoBehaviour
         // Logic for chasing state
 
         showRay();
-        RotateTowardsPlayer();  // Ensure the enemy faces the player
-       
-        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, chaseSpeed * Time.deltaTime);
+
+        //transform.position = Vector3.MoveTowards(transform.position, player.transform.position, chaseSpeed * Time.deltaTime);
+
+        //RotateTowardsPlayer();
+
+        agent.destination = player.transform.position;
 
         if (Vector3.Distance(transform.position, player.transform.position) <= shootingRange)
         {
             currentState = State.Shooting;
+        }
+    }
+
+    void GoLocation()
+    {
+        if (hasBulletPosition && agent != null)
+        {
+            agent.destination = bulletInitialPosition;
+
+            // Rotate towards the destination
+            Vector3 direction = bulletInitialPosition - transform.position;
+            if (direction != Vector3.zero) // Avoid zero direction
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+            }
+
+            if (Vector3.Distance(transform.position, bulletInitialPosition) < 1f)
+            {
+                currentState = State.Idle;
+                hasBulletPosition = false; // Reset after reaching the position
+            }
         }
     }
 
@@ -361,7 +285,7 @@ public class EnemyFSM : MonoBehaviour
         if (player != null)
         {
             showRay();
-            RotateTowardsPlayer();
+            agent.destination = player.transform.position;
             ShootAtPlayerIfVisible();
         }
 
@@ -371,9 +295,11 @@ public class EnemyFSM : MonoBehaviour
         }
     }
 
+
+
     void RotateTowardsPlayer()
     {
-        Vector3 direction = (player.transform.position - transform.position).normalized;
+        Vector3 direction = (player.transform.position-transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, turnSpeed * Time.deltaTime);
     }
@@ -403,7 +329,6 @@ public class EnemyFSM : MonoBehaviour
                 // Check if the enemy can fire
                 if (Time.time >= nextFireTime)
                 {
-                    Debug.Log("Firing at player");
                     nextFireTime = Time.time + 1f / fireRate;
 
                     // Call the Shoot method if the player is visible
@@ -431,35 +356,8 @@ public class EnemyFSM : MonoBehaviour
         Destroy(bullet, 2.0f);
     }
 
-
-
     void showRay()
     {
-
-        //if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hitinfo, 20f))
-        //{
-        //    Debug.Log("Detected");
-
-        //    // Set the positions for the LineRenderer to visualize the raycast hit
-        //    lineRenderer.SetPosition(0, transform.position);
-        //    lineRenderer.SetPosition(1, hitinfo.point);
-
-        //    // Set the color of the line to red
-        //    lineRenderer.startColor = Color.blue;
-        //    lineRenderer.endColor = Color.red;
-        //}
-        //else
-        //{
-        //    Debug.Log("No Detection");
-
-        //    // Set the positions for the LineRenderer to visualize the full length of the ray
-        //    lineRenderer.SetPosition(0, transform.position);
-        //    lineRenderer.SetPosition(1, transform.position + transform.TransformDirection(Vector3.forward) * 20f);
-
-        //    // Set the color of the line to green
-        //    lineRenderer.startColor = Color.green;
-        //    lineRenderer.endColor = Color.green;
-        //}
 
 
         Vector3 closestHitPoint = Vector3.zero;
@@ -511,31 +409,26 @@ public class EnemyFSM : MonoBehaviour
                 lineRenderers[i].endColor = Color.green;
             }
         }
-
     }
 
+   
 
+   //public void OnBulletSpawned(GameObject bullet)
+   //{
+   //    // Find the AudioSource component on the bullet
+   //    currentAudioSource = bullet.GetComponent<AudioSource>();
+   //
+   //    if (currentAudioSource != null)
+   //    {
+   //        // Initialize the audioPosition Transform's position
+   //        audioPosition.position = currentAudioSource.transform.position;
+   //    }
+   //    else
+   //    {
+   //        Debug.LogError("No AudioSource found on the bullet prefab.");
+   //    }
+   //}
 
-
-    // // Destroy the previous ray
-    // if (currentRay != null)
-    // {
-    //     Destroy(currentRay);
-    // }
-
-    // Instantiate the ray prefab
-    // currentRay = Instantiate(rayPrefab, bulletPoint.position, Quaternion.identity);
-    //
-    // // Set the positions of the LineRenderer to show the ray
-    // LineRenderer lr = currentRay.GetComponent<LineRenderer>();
-    // lr.SetPosition(0, bulletPoint.position);
-    // lr.SetPosition(1, player.transform.position);
-
-    // Check if the ray intersects with the player
-    //if (Vector3.Distance(player.transform.position, bulletPoint.position) < lr.bounds.size.magnitude)
-    //{
-    //    ShootAtPlayer();
-    //}
 }
 
 

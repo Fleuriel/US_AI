@@ -639,6 +639,7 @@ GameObject:
   - component: {fileID: 2018567440383291506}
   - component: {fileID: 2913505349587218975}
   - component: {fileID: 5944694969382322697}
+  - component: {fileID: 4663694621951984412}
   m_Layer: 0
   m_Name: Enemy_Scen_2
   m_TagString: Untagged
@@ -754,10 +755,30 @@ MonoBehaviour:
   shootingRange: 20
   fireRate: 1
   bulletPrefab: {fileID: 1228556238294366535, guid: dc00c91a9d29f1248963bc480210e424, type: 3}
-  bulletPoint: {fileID: 0}
+  bulletPoint: {fileID: 1203857241720411971}
   player: {fileID: 8542240693122547058, guid: 76883dc3e66480448855a1c69e88d1a3, type: 3}
   bulletSpeed: 50
   turnSpeed: 2
   rotationSpeed: 5
-  audioSource: {fileID: 0}
-  audioListener: {fileID: 0}
+--- !u!195 &4663694621951984412
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7277076493438638145}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1
+  m_BaseOffset: 0.5
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4

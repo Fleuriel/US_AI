@@ -35,7 +35,6 @@ public class EnemyFSM_Distance : MonoBehaviour
     public float rotationSpeed = 5f;
 
     private NavMeshAgent agent;
-    private Vector3 soundLocation;
 
     void Start()
     {

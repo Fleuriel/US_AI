@@ -2924,6 +2924,17 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1235640040}
   m_Enabled: 1
+--- !u!114 &1235640047 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8820295343978542379, guid: 531ae0a7bd930d24b984f265fb9c7532, type: 3}
+  m_PrefabInstance: {fileID: 660912192}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235640040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48bd2913a6506b443b3d0df109487872, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1255452534
 GameObject:
   m_ObjectHideFlags: 0
@@ -3218,6 +3229,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3187771484630697972, guid: 76883dc3e66480448855a1c69e88d1a3, type: 3}
+      propertyPath: enemy
+      value: 
+      objectReference: {fileID: 1235640047}
+    - target: {fileID: 3187771484630697972, guid: 76883dc3e66480448855a1c69e88d1a3, type: 3}
       propertyPath: ourCamera
       value: 
       objectReference: {fileID: 1343770452}
@@ -3257,6 +3272,10 @@ PrefabInstance:
       propertyPath: PositionThree
       value: 
       objectReference: {fileID: 2006418706}
+    - target: {fileID: 8778226599228322779, guid: 76883dc3e66480448855a1c69e88d1a3, type: 3}
+      propertyPath: movementSpeed
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 8778226599228322779, guid: 76883dc3e66480448855a1c69e88d1a3, type: 3}
       propertyPath: PlayerPosition
       value: 

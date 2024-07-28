@@ -64,14 +64,20 @@ public class PlayerShooting : MonoBehaviour
 
     void ShootBullet()
     {
-        Debug.Log("shooting");
+        Debug.Log("player shooting");
 
         GameObject bullet = Instantiate(bulletPrefab, bulletPoint.transform.position, transform.rotation);
         bullet.GetComponent<Rigidbody>().AddForce(ourCamera.transform.forward * bulletSpeed);
 
+        if (enemy == null)
+        {
+            Debug.LogWarning("Enemy reference is not set!");
+        }
+
         if (enemy != null)
         {
             enemy.SetBulletInitialPosition(bullet.transform.position);
+            enemy.hasDetectedBullet = false;
         }
 
         Destroy(bullet, 2);

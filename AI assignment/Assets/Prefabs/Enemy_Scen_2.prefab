@@ -638,8 +638,8 @@ GameObject:
   - component: {fileID: 3354094624399910282}
   - component: {fileID: 2018567440383291506}
   - component: {fileID: 2913505349587218975}
-  - component: {fileID: 5944694969382322697}
   - component: {fileID: 4663694621951984412}
+  - component: {fileID: 6463669311917755962}
   m_Layer: 0
   m_Name: Enemy_Scen_2
   m_TagString: Untagged
@@ -735,31 +735,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5944694969382322697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7277076493438638145}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95965f2f81f814d4093fa80231d854a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentState: 0
-  waypoints: []
-  patrolSpeed: 2
-  chaseSpeed: 4
-  detectionRange: 25
-  shootingRange: 20
-  fireRate: 1
-  bulletPrefab: {fileID: 1228556238294366535, guid: 170dcf727d205d34c8ce5763cdb41313, type: 3}
-  bulletPoint: {fileID: 1203857241720411971}
-  player: {fileID: 0}
-  bulletSpeed: 50
-  turnSpeed: 2
-  rotationSpeed: 5
 --- !u!195 &4663694621951984412
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -782,3 +757,28 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &6463669311917755962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7277076493438638145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904b5a75bed2cdd4c8d6c47c6173fbd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentState: 0
+  waypoints: []
+  patrolSpeed: 2
+  chaseSpeed: 4
+  detectionRange: 25
+  shootingRange: 20
+  fireRate: 1
+  bulletPrefab: {fileID: 1228556238294366535, guid: dc00c91a9d29f1248963bc480210e424, type: 3}
+  bulletPoint: {fileID: 1203857241720411971}
+  player: {fileID: 8542240693122547058, guid: 76883dc3e66480448855a1c69e88d1a3, type: 3}
+  bulletSpeed: 50
+  turnSpeed: 2
+  rotationSpeed: 5
